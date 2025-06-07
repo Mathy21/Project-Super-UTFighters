@@ -1,0 +1,204 @@
+// Main
+life = 0;
+char_id = 0;
+
+// Movement
+hspd = 0;
+vspd = 0;
+spd = 250;
+player_num = 0;
+jump_power = -600;
+can_jump = true;
+
+// Main combat variables
+input_buffer = [];
+input_cooldown = 20;
+
+// Inputs
+player_num = 0;
+// Player 1 Inputs
+inputs_p1 = {
+    up: ord("W"),
+    left: ord("A"),
+    down: ord("S"),
+    right: ord("D"),
+    // Default Combat
+    light_atk: ord("I"),
+    heavy_atk: ord("O"),
+    light_kick: ord("K"),
+    heavy_kick: ord("L")
+}
+// Player 2 Inputs
+inputs_p2 = {
+    up: ord("W"),
+    left: ord("A"),
+    down: ord("S"),
+    right: ord("D"),
+    // Default Combat
+    light_atk: ord("I"),
+    heavy_atk: ord("O"),
+    light_kick: ord("K"),
+    heavy_kick: ord("L")
+}
+// Inputs array by player number(Player 1 = 0 and Player 2 = 1)
+inputs = [inputs_p1,inputs_p2];
+up = 0;
+left = 0;
+down = 0;
+right = 0;
+// Default Combat
+light_atk = 0;
+heavy_atk = 0;
+light_kick = 0;
+heavy_kick = 0;
+// Conditionals
+is_moving = 0;
+combo_grid_w = 0;
+combo_grid_h = 0;
+combo_grid = ds_grid_create(combo_grid_w,combo_grid_h);
+combo_array = [["Super Foda",["left","down","right","l_atk"]],
+               ["Kill tomas",["down","right","h_atk"]]];
+
+///@method fill_grid(grid index, grid width, grid height, array);
+fill_grid = function(_grid,_grid_w,_grid_h,_supply_array){
+    if(array_length(_supply_array) > 0){
+       if(array_length(_supply_array) > _grid_h){
+           _grid_h = array_length(_supply_array);
+       }
+       if(array_length(_supply_array[0]) > _grid_w){
+           _grid_w = array_length(_supply_array[0]);
+       }
+       ds_grid_resize(_grid,_grid_w,_grid_h); 
+       for(var i=0; i<array_length(_supply_array); i++){
+           for(var j=0; j<array_length(_supply_array[i]); j++){
+              _grid[# i,j] = _supply_array[i][j]; 
+           }
+        }
+    }
+}
+
+inputs_symbols_array = [];
+
+// State Machine
+enum CHARACTER_STATE{
+    // ** All this states are setted by default\
+    // For new attacks or movements, just create it bellow
+    BASE,
+    IDLE,
+    MOVING_FORWARD,
+    MOVING_BACKWARD,
+    CROUCHED,
+    ON_AIR,
+    // ATTACK
+    LIGHT_ATTACK,
+    HEAVY_ATTACK,
+    LIGHT_KICK,
+    HEAVY_KICK,
+    CROUCHED_ATTACK,
+    CROUCHED_KICK,
+    AIR_ATTACK,
+    AIR_KICK
+}
+
+state = CHARACTER_STATE.BASE;
+state_array[CHARACTER_STATE.BASE] = default_base_state;
+state_array[CHARACTER_STATE.IDLE] = default_idle_state;
+state_array[CHARACTER_STATE.MOVING_FORWARD] = default_moving_forward_state;
+state_array[CHARACTER_STATE.MOVING_BACKWARD] = default_moving_backward_state;
+state_array[CHARACTER_STATE.CROUCHED] = default_crouched_state;
+state_array[CHARACTER_STATE.ON_AIR] = default_on_air_state;
+state_array[CHARACTER_STATE.LIGHT_ATTACK] = default_light_attack_state;
+state_array[CHARACTER_STATE.HEAVY_ATTACK] = default_heavy_attack_state;
+state_array[CHARACTER_STATE.LIGHT_KICK] = default_light_kick_state;
+state_array[CHARACTER_STATE.HEAVY_KICK] = default_heavy_kick_state;
+state_array[CHARACTER_STATE.CROUCHED_ATTACK] = default_crouched_attack_state;
+state_array[CHARACTER_STATE.CROUCHED_KICK] = default_crouched_kick_state;
+state_array[CHARACTER_STATE.AIR_ATTACK] = default_air_attack_state;
+state_array[CHARACTER_STATE.AIR_KICK] = default_air_kick_state;
+
+// Set Inputs Functions
+set_inputs = function(){
+    up = keyboard_check(inputs[player_num].up);
+    left = keyboard_check(inputs[player_num].left);
+    down = keyboard_check(inputs[player_num].down);
+    right = keyboard_check(inputs[player_num].right);
+    // Default Combat
+    light_atk = keyboard_check_pressed(inputs[player_num].light_atk);
+    heavy_atk = keyboard_check_pressed(inputs[player_num].heavy_atk);
+    light_kick = keyboard_check_pressed(inputs[player_num].light_kick);
+    heavy_kick = keyboard_check_pressed(inputs[player_num].heavy_kick);
+    
+    // Conditionals
+    is_moving = left || right ? true : false;
+}
+
+// Side Checker
+side_checker = function(){
+    if(x <= room_width/2){
+        player_num = 0
+    }
+    else{
+        player_num = 1;
+    }
+}
+
+// Basic Collision
+default_collision = function(){
+    repeat(abs(vspd)){
+		var _ground_col = place_meeting(x,y+sign(vspd),par_collision);
+		if(_ground_col){
+			vspd = 0;
+			break;
+		}
+		else{
+			y += sign(vspd)*delta_time/1000000;
+		}
+	}
+    repeat(abs(hspd)){
+		var _ground_col = place_meeting(x+sign(hspd),y,par_collision);
+		if(_ground_col){
+			hspd = 0;
+			break;
+		}
+		else{
+			x += sign(hspd)*delta_time/1000000;
+		}
+	}
+}
+
+// Check witch kee is being pressed
+check_key = function(){
+    if(keyboard_key != vk_nokey){
+        for(var i=0; i<array_length(inputs_symbols_array); i++){
+            if(keyboard_key == inputs_symbols_array[i][0] && keyboard_check_pressed(keyboard_key)){
+                array_push(input_buffer,inputs_symbols_array[i][1]);
+            }
+        }
+    }
+}
+
+input_array_clear = function(){
+    if(input_cooldown > 0 && array_length(input_buffer) > 0){
+        input_cooldown -= delta_time/1000000 * 60;
+    }
+        else if(input_cooldown <= 0){
+            for(var i=0; i<ds_grid_height(combo_grid); i++){
+                for(var j=0; j<ds_grid_width(combo_grid); j++){
+                    
+                }
+            }
+            while(array_length(input_buffer) > 0){
+                array_pop(input_buffer);
+            }
+            input_cooldown = 20;
+        }
+}
+
+
+// Input check system
+combo_input = function(){
+    
+}
+
+// Executing Functions
+fill_grid(combo_grid,combo_grid_w,combo_grid_h,combo_array);
