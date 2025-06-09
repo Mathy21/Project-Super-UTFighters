@@ -53,27 +53,23 @@ light_kick = 0;
 heavy_kick = 0;
 // Conditionals
 is_moving = 0;
-combo_grid_w = 0;
-combo_grid_h = 0;
-combo_grid = ds_grid_create(combo_grid_w,combo_grid_h);
-combo_array = [["Super Foda",["left","down","right","l_atk"]],
-               ["Kill tomas",["down","right","h_atk"]]];
+combo_grid_w = 3;
+combo_grid = ds_grid_create(combo_grid_w,1);
+combo_array = [{combo_name: "Super Foda", combo_inputs: ["left","down","right","l_atk"]},
+               {combo_name: "Kill tomas", combo_inputs: ["down","right","h_atk"]},
+               {combo_name: "Kill all tomas", combo_inputs: ["right","down","left","h_atk"]} ];
 
 ///@method fill_grid(grid index, grid width, grid height, array);
-fill_grid = function(_grid,_grid_w,_grid_h,_supply_array){
-    if(array_length(_supply_array) > 0){
-       if(array_length(_supply_array) > _grid_h){
-           _grid_h = array_length(_supply_array);
-       }
-       if(array_length(_supply_array[0]) > _grid_w){
-           _grid_w = array_length(_supply_array[0]);
-       }
-       ds_grid_resize(_grid,_grid_w,_grid_h); 
-       for(var i=0; i<array_length(_supply_array); i++){
-           for(var j=0; j<array_length(_supply_array[i]); j++){
-              _grid[# i,j] = _supply_array[i][j]; 
-           }
-        }
+fill_combo_grid = function(){
+    var _grid_h = array_length(combo_array);
+    if(array_length(combo_array) > 0){
+       ds_grid_resize(combo_grid,combo_grid_w,_grid_h); 
+       for(var i=0; i<ds_grid_height(combo_grid); i++){
+        var _ca = combo_array[i];
+        combo_grid[# 0,i] = _ca.combo_name;
+        combo_grid[# 1,i] = _ca.combo_inputs;
+        combo_grid[# 2,i] = array_length(_ca.combo_inputs);
+      }
     }
 }
 
@@ -177,6 +173,10 @@ check_key = function(){
     }
 }
 
+search_in_grid = function(){
+    
+}
+
 input_array_clear = function(){
     if(input_cooldown > 0 && array_length(input_buffer) > 0){
         input_cooldown -= delta_time/1000000 * 60;
@@ -201,4 +201,4 @@ combo_input = function(){
 }
 
 // Executing Functions
-fill_grid(combo_grid,combo_grid_w,combo_grid_h,combo_array);
+fill_combo_grid();
