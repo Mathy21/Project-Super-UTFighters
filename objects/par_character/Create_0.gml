@@ -12,7 +12,8 @@ can_jump = true;
 
 // Main combat variables
 input_buffer = [];
-input_cooldown = 20;
+input_cooldown_v = 20;
+input_cooldown = input_cooldown_v;
 
 // Inputs
 player_num = 0;
@@ -173,32 +174,41 @@ check_key = function(){
     }
 }
 
-search_in_grid = function(){
-    
+///@method clean_array(array_index);
+clean_array = function(_array){
+  while(array_length(_array) > 0){
+    array_pop(_array);
+  }
 }
 
-input_array_clear = function(){
+compare_buffer_and_grid = function(){
     if(input_cooldown > 0 && array_length(input_buffer) > 0){
         input_cooldown -= delta_time/1000000 * 60;
     }
         else if(input_cooldown <= 0){
             for(var i=0; i<ds_grid_height(combo_grid); i++){
-                for(var j=0; j<ds_grid_width(combo_grid); j++){
+                var _array_size = array_length(input_buffer);
+                if(_array_size > 0 && combo_grid[# 2,i] == _array_size){
+                    for(var j=0; j<combo_grid[# 2,i]; j++){
+                        if(combo_grid[# 1,i][j] != input_buffer[j]){
+                            show_debug_message("Undefined");
+                            continue;
+                        }
+                            else if(j == array_length(combo_grid[# 1,i])-1 && combo_grid[# 1,i][j] == input_buffer[j]){
+                                show_debug_message("Finded");
+                                clean_array(input_buffer);
+                                input_cooldown = 20;
+                                break;
+                            }
+                    }
                     
                 }
             }
-            while(array_length(input_buffer) > 0){
-                array_pop(input_buffer);
-            }
+            clean_array(input_buffer);
             input_cooldown = 20;
         }
 }
 
-
-// Input check system
-combo_input = function(){
-    
-}
 
 // Executing Functions
 fill_combo_grid();

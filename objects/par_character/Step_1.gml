@@ -17,4 +17,4 @@ inputs_symbols_array = [[inputs[player_num].up,"up"],
 check_key();
 
 
-input_array_clear();
+compare_buffer_and_grid();
