@@ -1,0 +1,1 @@
+ds_grid_destroy(move_set_grid);

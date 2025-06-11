@@ -1,5 +1,5 @@
 // Main
-life = 0;
+
 char_id = 0;
 
 // Movement
@@ -9,6 +9,31 @@ spd = 250;
 player_num = 0;
 jump_power = -600;
 can_jump = true;
+
+///@method character_define(life,speed,jump_power[default: -600],sprite_grid_index,moves_grid_index)
+character_define = function(_life,_spd,_jump_power,_sprite_grid_index,_moves_grid_index) constructor {
+    life = _life;
+    spd = _spd;
+    jump_power = _jump_power;
+    
+    static define_sprites = function(){
+        
+    }
+    
+    static define_move_set = function(){
+        combo_array = 
+    }
+}
+
+// Animation
+sprites_struct = {
+    // Basic 
+    idle: 0,
+    moving_forward: 0,
+    moving_backward: 0,
+    
+    
+}
 
 // Main combat variables
 input_buffer = [];
