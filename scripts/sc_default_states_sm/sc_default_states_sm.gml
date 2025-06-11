@@ -24,6 +24,7 @@ function default_base_state(){
 }
 
 function default_idle_state(){
+    
     set_state_by_side(player_num);
 }
 
