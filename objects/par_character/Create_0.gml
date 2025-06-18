@@ -11,33 +11,28 @@ jump_power = -600;
 can_jump = true;
 
 ///@method character_define(life,speed,jump_power[default: -600],sprite_grid_index,moves_grid_index)
-character_define = function(_life,_spd,_jump_power,_sprite_grid_index,_moves_grid_index) constructor {
+character_define = function(_life,_spd,_jump_power,_sprite_grid_index,_moves_list_index) constructor {
     life = _life;
     spd = _spd;
-    jump_power = _jump_power;
-    
-    static define_sprites = function(){
-        
+    moves_list_index = _moves_list_index;
+    combo_array = 0;
+    if(_jump_power == 0){
+        jump_power = -600;
     }
+        else{
+            jump_power = _jump_power;
+        }
     
-    static define_move_set = function(){
-        combo_array = 
+    define_move_set = function(){
+        combo_array = global.move_set_list[| moves_list_index];
     }
 }
 
-// Animation
-sprites_struct = {
-    // Basic 
-    idle: 0,
-    moving_forward: 0,
-    moving_backward: 0,
-    
-    
-}
+character = 0;
 
 // Main combat variables
 input_buffer = [];
-input_cooldown_v = 20;
+input_cooldown_v = 60;
 input_cooldown = input_cooldown_v;
 
 // Inputs
@@ -81,17 +76,14 @@ heavy_kick = 0;
 is_moving = 0;
 combo_grid_w = 3;
 combo_grid = ds_grid_create(combo_grid_w,1);
-combo_array = [{combo_name: "Super Foda", combo_inputs: ["left","down","right","l_atk"]},
-               {combo_name: "Kill tomas", combo_inputs: ["down","right","h_atk"]},
-               {combo_name: "Kill all tomas", combo_inputs: ["right","down","left","h_atk"]} ];
 
 ///@method fill_grid(grid index, grid width, grid height, array);
 fill_combo_grid = function(){
-    var _grid_h = array_length(combo_array);
-    if(array_length(combo_array) > 0){
+    var _grid_h = array_length(character.combo_array);
+    if(array_length(character.combo_array) > 0){
        ds_grid_resize(combo_grid,combo_grid_w,_grid_h); 
        for(var i=0; i<ds_grid_height(combo_grid); i++){
-        var _ca = combo_array[i];
+        var _ca = character.combo_array[i];
         combo_grid[# 0,i] = _ca.combo_name;
         combo_grid[# 1,i] = _ca.combo_inputs;
         combo_grid[# 2,i] = array_length(_ca.combo_inputs);
@@ -222,7 +214,7 @@ compare_buffer_and_grid = function(){
                             else if(j == array_length(combo_grid[# 1,i])-1 && combo_grid[# 1,i][j] == input_buffer[j]){
                                 show_debug_message("Finded");
                                 clean_array(input_buffer);
-                                input_cooldown = 20;
+                                input_cooldown = input_cooldown_v;
                                 break;
                             }
                     }
@@ -230,10 +222,7 @@ compare_buffer_and_grid = function(){
                 }
             }
             clean_array(input_buffer);
-            input_cooldown = 20;
+            input_cooldown = input_cooldown_v;
         }
 }
 
-
-// Executing Functions
-fill_combo_grid();

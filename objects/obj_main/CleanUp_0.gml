@@ -1,1 +1,1 @@
-ds_grid_destroy(move_set_grid);
+ds_list_destroy(global.move_set_list);

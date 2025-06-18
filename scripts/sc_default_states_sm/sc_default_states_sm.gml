@@ -24,13 +24,12 @@ function default_base_state(){
 }
 
 function default_idle_state(){
-    
     set_state_by_side(player_num);
 }
 
 function default_moving_forward_state(){
     var _dir = point_direction(0,0,(right-left),(down-up));
-    hspd = lengthdir_x(spd,_dir);
+    hspd = lengthdir_x(character.spd,_dir);
     
     set_state_by_side(player_num);
     if(!is_moving){
@@ -40,7 +39,7 @@ function default_moving_forward_state(){
 
 function default_moving_backward_state(){
     var _dir = point_direction(0,0,(right-left),(down-up));
-    hspd = lengthdir_x(spd,_dir);
+    hspd = lengthdir_x(character.spd,_dir);
     
     set_state_by_side(player_num);
     if(!is_moving){
