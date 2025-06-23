@@ -1,0 +1,7 @@
+18/06/2025:
+To do next{
+    Start combo with a function
+    or state;
+    Basic PlaceholderMan attack sprites
+    Combo PlaceholderMan sprites
+}

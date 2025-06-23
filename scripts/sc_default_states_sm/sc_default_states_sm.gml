@@ -51,10 +51,6 @@ function default_crouched_state(){
     
 }
 
-function default_on_air_state(){
-    
-}
-
 // Default Attacks
 
 function default_heavy_attack_state(){

@@ -47,6 +47,7 @@
   },
   "name":"project_Super_UTFighters",
   "resources":[
+    {"id":{"name":"Note1","path":"notes/Note1/Note1.yy",},},
     {"id":{"name":"obj_main","path":"objects/obj_main/obj_main.yy",},},
     {"id":{"name":"obj_placeholderman","path":"objects/obj_placeholderman/obj_placeholderman.yy",},},
     {"id":{"name":"par_character","path":"objects/par_character/par_character.yy",},},

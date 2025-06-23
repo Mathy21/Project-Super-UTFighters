@@ -102,7 +102,6 @@ enum CHARACTER_STATE{
     MOVING_FORWARD,
     MOVING_BACKWARD,
     CROUCHED,
-    ON_AIR,
     // ATTACK
     LIGHT_ATTACK,
     HEAVY_ATTACK,
@@ -111,7 +110,8 @@ enum CHARACTER_STATE{
     CROUCHED_ATTACK,
     CROUCHED_KICK,
     AIR_ATTACK,
-    AIR_KICK
+    AIR_KICK,
+    SPECIAL
 }
 
 state = CHARACTER_STATE.BASE;
@@ -120,7 +120,6 @@ state_array[CHARACTER_STATE.IDLE] = default_idle_state;
 state_array[CHARACTER_STATE.MOVING_FORWARD] = default_moving_forward_state;
 state_array[CHARACTER_STATE.MOVING_BACKWARD] = default_moving_backward_state;
 state_array[CHARACTER_STATE.CROUCHED] = default_crouched_state;
-state_array[CHARACTER_STATE.ON_AIR] = default_on_air_state;
 state_array[CHARACTER_STATE.LIGHT_ATTACK] = default_light_attack_state;
 state_array[CHARACTER_STATE.HEAVY_ATTACK] = default_heavy_attack_state;
 state_array[CHARACTER_STATE.LIGHT_KICK] = default_light_kick_state;
@@ -129,6 +128,17 @@ state_array[CHARACTER_STATE.CROUCHED_ATTACK] = default_crouched_attack_state;
 state_array[CHARACTER_STATE.CROUCHED_KICK] = default_crouched_kick_state;
 state_array[CHARACTER_STATE.AIR_ATTACK] = default_air_attack_state;
 state_array[CHARACTER_STATE.AIR_KICK] = default_air_kick_state;
+
+enum CONDITION{
+    BASE,
+    ON_AIR,
+    ON_GROUND,
+    CROUCHED,
+    DAMAGED,
+    DOWNED,
+    IN_COMBO
+}
+condition = CONDITION.BASE;
 
 // Set Inputs Functions
 set_inputs = function(){
