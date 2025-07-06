@@ -128,6 +128,7 @@ state_array[CHARACTER_STATE.CROUCHED_ATTACK] = default_crouched_attack_state;
 state_array[CHARACTER_STATE.CROUCHED_KICK] = default_crouched_kick_state;
 state_array[CHARACTER_STATE.AIR_ATTACK] = default_air_attack_state;
 state_array[CHARACTER_STATE.AIR_KICK] = default_air_kick_state;
+state_array[CHARACTER_STATE.SPECIAL] = default_special_state;
 
 enum CONDITION{
     BASE,

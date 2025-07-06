@@ -84,3 +84,7 @@ function default_air_attack_state(){
 function default_air_kick_state(){
     
 }
+
+function default_special_state(){
+    
+}
