@@ -10,19 +10,72 @@ player_num = 0;
 jump_power = -600;
 can_jump = true;
 
+// Sprites
+s_idle = 0;
+s_forward = 0;
+s_backward = 0;
+s_crouched = 0;
+s_l_atk = 0;
+s_h_atk = 0;
+s_c_atk = 0;
+s_c_kick = 0;
+s_l_kick = 0;
+s_h_kick = 0;
+s_a_atk = 0;
+s_a_kick = 0;
+
+
 ///@method character_define(life,speed,jump_power[default: -600],sprite_grid_index,moves_grid_index)
-character_define = function(_life,_spd,_jump_power,_sprite_grid_index,_moves_list_index) constructor {
+character_define = function(_life,_spd,_jump_power,_sprite_list_index,_moves_list_index) constructor {
     life = _life;
     spd = _spd;
     moves_list_index = _moves_list_index;
+    sprite_list_index = _sprite_list_index;
+    sprite_list = 0;
     combo_array = 0;
+    
+    // Sprites Variables
+    s_idle = 0;
+    s_forward = 0;
+    s_backward = 0;
+    s_crouched = 0;
+    s_l_atk = 0;
+    s_h_atk = 0;
+    s_c_atk = 0;
+    s_c_kick = 0;
+    s_l_kick = 0;
+    s_h_kick = 0;
+    s_a_atk = 0;
+    s_a_kick = 0;
+    
+    // Functions
     if(_jump_power == 0){
         jump_power = -600;
     }
         else{
             jump_power = _jump_power;
         }
+    define_sprite_list = function(){
+        sprite_list = global.sprite_set_list[| sprite_list_index];
+    }
     
+    define_sprite_variables = function(){
+        if(sprite_list != 0){
+            s_idle = sprite_list.idle;
+            s_forward = sprite_list.forward;
+            s_backward = sprite_list.backward;
+            s_crouched = sprite_list.crouched;
+            s_l_atk = sprite_list.light_atk;
+            s_h_atk = sprite_list.heavy_atk;
+            s_c_atk = sprite_list.crouched_atk;
+            s_c_kick = sprite_list.crouched_kick;
+            s_l_kick = sprite_list.light_kick;
+            s_h_kick = sprite_list.heavy_kick;
+            s_a_atk = sprite_list.air_atk;
+            s_a_kick = sprite_list.air_kick;  
+        }
+    }
+
     define_move_set = function(){
         combo_array = global.move_set_list[| moves_list_index];
     }
@@ -67,6 +120,11 @@ up = 0;
 left = 0;
 down = 0;
 right = 0;
+// Released
+up_release = 0;
+left_release = 0;
+down_release = 0; 
+right_release = 0;
 // Default Combat
 light_atk = 0;
 heavy_atk = 0;
@@ -147,6 +205,11 @@ set_inputs = function(){
     left = keyboard_check(inputs[player_num].left);
     down = keyboard_check(inputs[player_num].down);
     right = keyboard_check(inputs[player_num].right);
+    // Released Keys
+    up_release = keyboard_check_released(inputs[player_num].up);
+    left_release = keyboard_check_released(inputs[player_num].left);
+    down_release = keyboard_check_released(inputs[player_num].down);
+    right_release = keyboard_check_released(inputs[player_num].right);
     // Default Combat
     light_atk = keyboard_check_pressed(inputs[player_num].light_atk);
     heavy_atk = keyboard_check_pressed(inputs[player_num].heavy_atk);

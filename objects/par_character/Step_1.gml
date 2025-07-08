@@ -1,3 +1,6 @@
+if(character != 0){
+    character.define_sprite_variables();
+}
 
 set_inputs();
 
